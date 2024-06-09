@@ -138,13 +138,21 @@ function renderClothes(clothes) {
   });
 }
 
+// Fuse.js options
+const fuseOptions = {
+  keys: ["name", "description"],
+  threshold: 0.3,
+};
+
+// Create the Fuse instance
+const fuse = new Fuse(clothes, fuseOptions);
+
 // Function to handle search input
 function handleSearch(event) {
   const query = event.target.value.toLowerCase();
   if (query.length > 3) {
-    const filteredClothes = clothes.filter((item) =>
-      item.name.toLowerCase().includes(query)
-    );
+    const result = fuse.search(query);
+    const filteredClothes = result.map((r) => r.item);
     renderClothes(filteredClothes);
   } else {
     renderClothes([]);
